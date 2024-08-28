@@ -1,12 +1,6 @@
 import createHttpError from 'http-errors';
 
-import {
-  getAllCampers,
-  getCamperById,
-  createCamper,
-  updateCamper,
-  deleteCamper,
-} from '../services/campers.js';
+import { getAllCampers, getCamperById } from '../services/campers.js';
 
 import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
@@ -30,7 +24,7 @@ export const getCampersController = async (req, res) => {
   });
 };
 
-export const getCampercByIdController = async (req, res) => {
+export const getCampersByIdController = async (req, res) => {
   const camperId = req.params.camperId;
 
   const camper = await getCamperById(camperId);
@@ -48,39 +42,4 @@ export const getCampercByIdController = async (req, res) => {
       data: { message: 'Camper not found' },
     });
   }
-};
-
-export const createCamperController = async (req, res) => {
-  const camper = await createCamper(req.body);
-  res.status(201).json({
-    status: 201,
-    message: 'Successfully created a camper!',
-    data: camper,
-  });
-};
-export const patchCamperController = async (req, res, next) => {
-  const camperId = req.params.camperId;
-
-  const result = await updateCamper(camperId, req.body);
-
-  if (!result) {
-    next(createHttpError(404, 'Camper not found'));
-    return;
-  }
-  res.json({
-    status: 200,
-    message: 'Successfully patched a camper!',
-    data: result.camper,
-  });
-};
-
-export const deleteCamperController = async (req, res, next) => {
-  const { camperId } = req.params;
-  const camper = await deleteCamper(camperId);
-  if (!camper) {
-    next(createHttpError(404, 'Camper not found'));
-    return;
-  }
-
-  res.status(204).send();
 };

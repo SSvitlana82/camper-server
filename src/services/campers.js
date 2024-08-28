@@ -5,7 +5,7 @@ import { SORT_ORDER } from '../constants/index.js';
 
 export const getAllCampers = async ({
   page = 1,
-  perPage = 10,
+  perPage = 4,
   sortOrder = SORT_ORDER.ASC,
   sortBy = '_id',
   filter = {},
@@ -14,11 +14,14 @@ export const getAllCampers = async ({
   const skip = (page - 1) * perPage;
 
   const campersQuery = campersCollection.find();
-  if (filter.camperType) {
-    campersQuery.where('camperType').equals(filter.camperType);
+  if (filter.location) {
+    campersQuery.where('location').regex(new RegExp(filter.location, 'i'));
   }
-  if (filter.isFavourite) {
-    campersQuery.where('isFavourite').equals(filter.isFavourite);
+
+  if (filter.details) {
+    filter.details.forEach((detail) => {
+      campersQuery.where(`details.${detail}`).gt(0);
+    });
   }
 
   const campersCountPromise = campersCollection

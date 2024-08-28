@@ -1,24 +1,16 @@
-const parseCamperType = (camperType) => {
+const parseCamperDetails = (camperType) => {
   const isString = typeof camperType === 'string';
   if (!isString) return;
-  const isType = (camperType) =>
-    ['work', 'home', 'personal'].includes(camperType);
-
-  if (isType(camperType)) return camperType;
-};
-
-const parseBoolean = (boolean) => {
-  const isString = typeof boolean === 'string';
-  if (!isString) return;
-  const isBoolean = (boolean) => ['true', 'false'].includes(boolean);
-  if (isBoolean(boolean)) return boolean;
+  return camperType.split(',');
 };
 
 export const parseFilterParams = (query) => {
-  const parsedType = parseCamperType(query.camperType);
-  const parsedIsFavourite = parseBoolean(query.isFavourite);
+  const parsedType = parseCamperDetails(query.form);
+  const parsedDetails = parseCamperDetails(query.details);
+  const parsedLocation = query.location;
   return {
-    camperType: parsedType,
-    isFavourite: parsedIsFavourite,
+    form: parsedType,
+    details: parsedDetails,
+    location: parsedLocation,
   };
 };
