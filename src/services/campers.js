@@ -23,7 +23,9 @@ export const getAllCampers = async ({
       campersQuery.where(`details.${detail}`).gt(0);
     });
   }
-
+  if (filter.form) {
+    campersQuery.where(`form`).in(filter.form);
+  }
   const campersCountPromise = campersCollection
     .find()
     .merge(campersQuery)
